@@ -1,0 +1,20 @@
+{
+  "schema": "gainfront.session/1",
+  "projectId": "P010",
+  "specVersion": "1.0.0",
+  "synthetic": true,
+  "source": {
+    "kind": "preset",
+    "presetId": "GF-B"
+  },
+  "constraints": {
+    "targetLufs": -20,
+    "peakCeilingDbTp": -1,
+    "toleranceLu": 0.25,
+    "marginDb": 0.3
+  },
+  "view": {
+    "selectedGainTick": 0,
+    "showBlockGates": true
+  }
+}

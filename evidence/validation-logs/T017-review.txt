@@ -1,0 +1,160 @@
+================================================================================
+P010-T017 INDEPENDENT CODE & LICENSE REVIEW AUDIT LOG
+================================================================================
+TASK_ID: P010-T017
+TIMESTAMP_UTC: 2026-11-02T17:39:00Z
+REVIEWER_MODEL: Gemini 3.8 Flash (High)
+SESSION_INDEPENDENCE: Independent new audit session; non-primary implementation session
+TARGET_CWD: /home/hatch/workspace/p010-work/P010-gainfront/03_source
+SYSTEM_OS: Linux 6.6.137+ x86_64
+NODE_VERSION: v24.13.0
+NPM_VERSION: 11.6.0
+FFMPEG_VERSION: 8.1.2
+
+--------------------------------------------------------------------------------
+1. SOURCE CODE BASELINE IDENTIFICATION
+--------------------------------------------------------------------------------
+GIT_STATUS: fatal: not a git repository (or any parent up to mount point /home)
+BASELINE_TYPE: File-by-file SHA-256 manifest (60 controlled source/test/doc files)
+SUMMARY_HASHES:
+  src/core/biquad.ts:     f35b70558331fb8f664a19ed17fd2cbf44f006d4401beb8f0fe6ac1e5c89c705
+  src/core/gating.ts:     51a47cf50438e8f1026268b69351809348721b99785cfaf70fd82e8c8beebdf1
+  src/core/truepeak.ts:   f799ee9690a89d28623bb1cb8daa9207524b85bda38cdbb2b7c7bd744fecf7cc
+  src/core/gain.ts:       f4cab23930cc58c003d76fa86aa6034eb43014ec87471a110dca4ebe68098a66
+  src/core/analyze.ts:    c0286164f3b5a2a654bf85a715173576571a37f24262ab3da6c0d74f9ba25b9e
+  src/core/session.ts:    49833d1d00f766c7d8d01399db54c7255439264e830cfbc96038a1fcb6cc4093
+  src/core/wav.ts:        36c070f0cc3e354bfb7b7b68522738549825fb59dff8843f4fdd00654b1fb02c
+  src/core/presets.ts:    38f78993354d47bd0b85b36e0110a07902e5c3f309ac65b86de430a443a22536
+  src/worker/gainfront.worker.ts: eab547b6adae6d8c034058e48c2ff7e65366336ce174f5df31aca93c9c011ec2
+  src/worker/protocol.ts: c4be50faf59c7d4f9e6deb25997339a6f653a5653a03d06414c1c6e23f3dbb5b
+  src/ui/App.tsx:         e1ce2a865604337fa5af39a6d9f7d28c302d1201e9a970ae4da3e38aac0fecc4
+  src/ui/ControlPanel.tsx: 2cc86831677e2e6948a8eef6155330897f35df9ae5ec0876d447b0350c84b94a
+  src/ui/EvidencePanel.tsx: 810d6a6c9317474ac10902f6520c8161018db24694d7d7f43e64744226535bf4
+  src/ui/GainFrontier.tsx: 6a9369bdcbec8c05d4ec7a5d4a5c0248a4ab200a06fb50441f0ddc2a6adc413f
+  src/ui/GateStrip.tsx:   b0406cfe9b32b27a44b281e37484d32c540d94c71786e8ca4b9a46712d161487
+  src/ui/ImportExport.tsx: 42956e41596fc22100ed058f21d1fd8d216c2b7ffc7f3ee59ed8ea4c5440c3de
+  src/ui/StatusBanner.tsx: ee12d444c8f376a094791eddf45c487930464e986eac6a64da85b286e05c3b6a
+  src/ui/WaveCompare.tsx: d9a79db7c110cb6426c6e89fd34e2304736548cd87c4d2b502462e3def6a40b5
+  (Full 60-file SHA-256 table archived in evidence/review-packs/INDEPENDENT_REVIEW.md)
+
+--------------------------------------------------------------------------------
+2. CHECKLIST AUDIT (8 ITEMS)
+--------------------------------------------------------------------------------
+[ITEM 1] 核心数学 (Core Math & Formulas)
+  - K-weighting filter coefficients verbatim to §5.2: PASS
+  - Two-stage gates strictly > (-70 and L_A - 10): PASS
+  - 4x windowed-sinc 33 taps & deterministic tie-break: PASS
+  - 481-grid discrete search with re-gating on every tick: PASS
+  - MATH01 to MATH10 full chain passing: PASS
+  - RATING: PASS (P0=0, P1=0, P2=0)
+
+[ITEM 2] 标准简化声明 (Simplification & Disclaimers)
+  - True-peak denoted as estimated dBTP everywhere: PASS
+  - Permanent disclaimers visible in StatusBanner, EvidencePanel, ImportExport: PASS
+  - No fraudulent claiming of ITU/EBU broadcast certification: PASS
+  - RATING: PASS (P0=0, P1=0, P2=0)
+
+[ITEM 3] 竞态与 Worker (Concurrency & Worker Design)
+  - requestId latest-wins verified: PASS
+  - Request cancellation verified: PASS
+  - 40s timeout & 100ms progress throttle verified: PASS
+  - Synchronous analyzeFn design assessed and risk analyzed: PASS
+  - RATING: PASS (P0=0, P1=0, P2=0)
+
+[ITEM 4] 文件输入安全 (File Input & Injection Security)
+  - Strict RIFF WAV parser (48k, PCM16, 1-30s, <=8MiB, single fmt/data): PASS
+  - Session JSON schema validation, 128KiB limit, non-finite rejection: PASS
+  - SHA-256 hash rebinding and tamper rejection: PASS
+  - Zero eval/innerHTML, zero storage (localStorage/sessionStorage/indexedDB): PASS
+  - Zero network, zero remote fonts: PASS
+  - RATING: PASS (P0=0, P1=0, P2=0)
+
+[ITEM 5] 测试可靠性 (Test Reliability & Oracle Independence)
+  - 50ms -> 250ms benchmark threshold relaxation justification verified: PASS
+  - No fragile timing or test order dependencies: PASS
+  - Oracle independence verified (independent synthesis + FFmpeg 8.1.2 ebur128): PASS
+  - RATING: PASS (P0=0, P1=0, P2=0)
+
+[ITEM 6] 会话设计 (Session Architecture & Untrusted Audit)
+  - exportSession stripping blockPowers does not impair rebind: PASS
+  - Audit cache is strictly untrusted and never displayed prior to WAV verification: PASS
+  - RATING: PASS (P0=0, P1=0, P2=0)
+
+[ITEM 7] 许可证与第三方声明 (License & Third-Party Notices)
+  - Root LICENSE & THIRD_PARTY_NOTICES.md currently absent in 03_source: OBSERVED
+  - Implementation plan assigns LICENSE/THIRD_PARTY_NOTICES.md to P010-T018: CONFIRMED
+  - Standard citations without verbatim reproduction: PASS
+  - RATING: PASS with mandatory T018 prerequisite (P0=0, P1=0, P2=1)
+
+[ITEM 8] UI 诚实性 (UI Honesty & Transparency)
+  - All displayed values derived from real AnalysisReport: PASS
+  - Zero mock/dummy data residues: PASS
+  - Waiting placeholders shown when no report is available: PASS
+  - RATING: PASS (P0=0, P1=0, P2=0)
+
+--------------------------------------------------------------------------------
+3. REAL COMMAND EXECUTION LOGS
+--------------------------------------------------------------------------------
+COMMAND 1: export TMPDIR="$(pwd)/.tmp" && npm run typecheck
+EXIT_CODE: 0
+OUTPUT:
+> p010-gainfront@1.0.0 typecheck
+> tsc --noEmit
+
+COMMAND 2: export TMPDIR="$(pwd)/.tmp" && npm run test:oracle
+EXIT_CODE: 0
+OUTPUT:
+> p010-gainfront@1.0.0 test:oracle
+> vitest run tests/oracle
+ ✓ tests/oracle/ebur128.test.ts (4 tests) 1198ms
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Duration  1.89s
+ [MATH03 GF-B] Worker: -23.0035 LUFS, FFmpeg: -23.0000 LUFS, Diff: 0.0035 LU
+ [MATH03 GF-C] Worker: -19.9932 LUFS, FFmpeg: -20.0000 LUFS, Diff: 0.0068 LU
+ [MATH03 GF-A] Worker: -23.0004 LUFS, FFmpeg: -23.0000 LUFS, Diff: 0.0004 LU
+
+COMMAND 3: export TMPDIR="$(pwd)/.tmp" && npm run test:e2e
+EXIT_CODE: 0
+OUTPUT:
+> p010-gainfront@1.0.0 test:e2e
+> playwright test
+Running 11 tests using 1 worker
+  ✓ 1 a11y.spec.ts: keyboard navigation across all interactive controls (4.0s)
+  ✓ 2 a11y.spec.ts: narrow screen 360px layout does not clip conclusions (1.3s)
+  ✓ 3 a11y.spec.ts: all 4 charts have explicit textual counterparts (1.4s)
+  ✓ 4 importExport.spec.ts: exports session JSON and verifies full read-back (592ms)
+  ✓ 5 importExport.spec.ts: rejects tampered session JSON (specVersion) (921ms)
+  ✓ 6 importExport.spec.ts: rejects tampered SHA-256 external WAV session (1.0s)
+  ✓ 7 offline.spec.ts: offline full workflow with zero external network requests (1.5s)
+  ✓ 8 offline.spec.ts: 8s mono, 30s stereo import, and input response benchmarks (3.4s)
+  ✓ 9 race.spec.ts: rapid preset switching guarantees latest-wins (1.9s)
+  ✓ 10 race.spec.ts: rapid target slider dragging guarantees clean final state (1.6s)
+  ✓ 11 tour.spec.ts: real flow GF-A blocked -> GF-B feasible -> export/rebind (3.0s)
+  11 passed (25.3s)
+
+SUPPLEMENTAL 1: export TMPDIR="$(pwd)/.tmp" && npm test
+EXIT_CODE: 0
+OUTPUT: 14 test files, 232 tests passed (100% PASS, Duration 10.31s)
+
+SUPPLEMENTAL 2: export TMPDIR="$(pwd)/.tmp" && npm run build
+EXIT_CODE: 0
+OUTPUT: 48 modules transformed, built dist/ in 2.13s
+
+--------------------------------------------------------------------------------
+4. DEFECT SUMMARY & VERDICT
+--------------------------------------------------------------------------------
+P0_COUNT: 0
+P1_COUNT: 0
+P2_COUNT: 1 (Absence of LICENSE & THIRD_PARTY_NOTICES.md in root, scheduled for T018)
+
+BLOCKS_T018: NO
+REASON: P0 and P1 counts are zero. The single P2 issue is the creation of LICENSE and THIRD_PARTY_NOTICES.md, which are explicit OUTPUT_PATHS of P010-T018.
+
+T018_MANDATORY_PREREQUISITES:
+  1. Create root LICENSE (MIT).
+  2. Create root THIRD_PARTY_NOTICES.md (React MIT, Vite MIT, Vitest MIT, Playwright Apache-2.0, TypeScript Apache-2.0).
+  3. Update README.md with licensing attribution section.
+
+OVERALL_VERDICT: PASS
+================================================================================

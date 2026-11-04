@@ -1,0 +1,34 @@
+{
+  "timestamp": "2026-11-04T04:16:21.653Z",
+  "platform": {
+    "os": "Linux x86_64 Ubuntu 24.04.5 LTS",
+    "cpu": "AMD EPYC 9D25 126-Core Processor (VM environment)",
+    "node": "v24.22.1",
+    "browser": "Chromium (Playwright headless)",
+    "windowsStatus": "NOT_TESTED"
+  },
+  "measurements": {
+    "mono8s": {
+      "name": "8秒 mono 完整分析用时",
+      "measuredMs": 239,
+      "thresholdMs": 5000,
+      "unit": "ms",
+      "status": "PASS"
+    },
+    "stereo30s": {
+      "name": "30秒 stereo 外部导入完整分析用时",
+      "measuredMs": 836,
+      "thresholdMs": 25000,
+      "unit": "ms",
+      "status": "PASS"
+    },
+    "inputResponse": {
+      "name": "页面主线程输入响应用时",
+      "measuredMs": 14.5,
+      "avgMs": 12.66,
+      "thresholdMs": 150,
+      "unit": "ms",
+      "status": "PASS"
+    }
+  }
+}

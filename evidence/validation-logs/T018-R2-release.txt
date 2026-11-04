@@ -1,0 +1,122 @@
+================================================================================
+P010 GAINFRONT OFFICIAL RELEASE BUNDLE EXECUTION (P010-T018-R2)
+================================================================================
+SCRIPT_START_UTC: 2026-11-02T19:22:39.266Z
+TARGET_CWD: /home/hatch/workspace/p010-work/P010-gainfront/03_source
+RELEASE_TAG: R2
+NODE_VERSION: v24.22.1
+PLATFORM: linux x64
+TMPDIR: /home/hatch/workspace/p010-work/P010-gainfront/03_source/.tmp
+
+>>> PHASE 1: CLEAN REBUILD (npm ci, typecheck, test, build)
+================================================================================
+COMMAND: npm ci
+DESCRIPTION: Clean reproducible dependency installation
+START_TIME_UTC: 2026-11-02T19:22:39.271Z
+--------------------------------------------------------------------------------
+
+added 101 packages in 3s
+
+18 packages are looking for funding
+  run `npm fund` for details
+--------------------------------------------------------------------------------
+EXIT_CODE: 0
+DURATION_MS: 2808
+END_TIME_UTC: 2026-11-02T19:22:42.079Z
+================================================================================
+COMMAND: npm run typecheck
+DESCRIPTION: TypeScript static type checking (tsc --noEmit)
+START_TIME_UTC: 2026-11-02T19:22:42.079Z
+--------------------------------------------------------------------------------
+
+> p010-gainfront@1.0.0 typecheck
+> tsc --noEmit
+--------------------------------------------------------------------------------
+EXIT_CODE: 0
+DURATION_MS: 5665
+END_TIME_UTC: 2026-11-02T19:22:47.744Z
+================================================================================
+COMMAND: npm test
+DESCRIPTION: Vitest unit, math, and oracle suite (vitest run)
+START_TIME_UTC: 2026-11-02T19:22:47.744Z
+--------------------------------------------------------------------------------
+
+> p010-gainfront@1.0.0 test
+> vitest run
+
+
+ RUN  v4.1.12 /home/hatch/workspace/p010-work/P010-gainfront/03_source
+
+ ✓ tests/math/session.test.ts (22 tests) 1497ms
+     ✓ preserves measurement and solver results across save -> load -> rebind for presets  528ms
+ ✓ tests/math/gain.test.ts (17 tests) 2060ms
+ ✓ tests/math/worker.test.ts (19 tests) 2280ms
+       ✓ executes preset analysis successfully and returns matching requestId with AnalysisReport  305ms
+       ✓ executes consecutive requests without state leakage or cache pollution  430ms
+ ✓ tests/math/types.test.ts (36 tests) 80ms
+ ✓ tests/math/gating.test.ts (18 tests) 575ms
+ ✓ tests/math/truepeak.test.ts (24 tests) 1486ms
+       ✓ verifies interpolated peak reading shifts strictly by ±6.0 dB with error < 1e-8 dB  396ms
+ ✓ tests/math/wav.test.ts (24 tests) 106ms
+ ✓ tests/ui/evidenceImportExport.test.ts (17 tests) 1089ms
+       ✓ verifies GF-A (Peak Trap): gBest 0.6, gTarget 7.0, deviation 6.4005, boundary 0.60 matches solver  303ms
+ ✓ tests/ui/gainFrontier.test.ts (11 tests) 828ms
+ ✓ tests/math/biquad.test.ts (17 tests) 1799ms
+       ✓ MATH01: all-zero input produces strictly zero output across all samples  1195ms
+ ✓ tests/ui/waveGate.test.ts (11 tests) 582ms
+stdout | tests/oracle/ebur128.test.ts > P010-T008 Independent Oracle: FFmpeg 8.1.2 ebur128 vs Worker measure() > MATH03: GF-B integrated loudness matches FFmpeg within ±0.20 LU
+[MATH03 GF-B] Worker: -23.0035 LUFS, FFmpeg: -23.0000 LUFS, Diff: 0.0035 LU
+
+stdout | tests/oracle/ebur128.test.ts > P010-T008 Independent Oracle: FFmpeg 8.1.2 ebur128 vs Worker measure() > GF-C (stereo energy): integrated loudness matches FFmpeg within ±0.20 LU
+[MATH03 GF-C] Worker: -19.9932 LUFS, FFmpeg: -20.0000 LUFS, Diff: 0.0068 LU
+
+ ✓ tests/math/presets.test.ts (16 tests) 3634ms
+       ✓ generates two identical, independent L/R tracks matching GF-B  3131ms
+ ✓ tests/math/regression-r1-01.test.ts (4 tests) 468ms
+     ✓ B01: modifying constraints on external PCM source continues using external source without switching to preset  367ms
+stdout | tests/oracle/ebur128.test.ts > P010-T008 Independent Oracle: FFmpeg 8.1.2 ebur128 vs Worker measure() > GF-A (peak trap): integrated loudness matches FFmpeg within ±0.20 LU
+[MATH03 GF-A] Worker: -23.0004 LUFS, FFmpeg: -23.0000 LUFS, Diff: 0.0004 LU
+
+ ✓ tests/oracle/ebur128.test.ts (4 tests) 3112ms
+     ✓ verifies FFmpeg binary is version 8.1.2  1089ms
+     ✓ MATH03: GF-B integrated loudness matches FFmpeg within ±0.20 LU  517ms
+     ✓ GF-C (stereo energy): integrated loudness matches FFmpeg within ±0.20 LU  729ms
+     ✓ GF-A (peak trap): integrated loudness matches FFmpeg within ±0.20 LU  767ms
+ ✓ tests/placeholder.test.ts (1 test) 4ms
+
+ Test Files  15 passed (15)
+      Tests  241 passed (241)
+   Start at  19:22:48
+   Duration  10.97s (transform 2.34s, setup 0ms, import 3.84s, tests 19.60s, environment 2ms)
+--------------------------------------------------------------------------------
+EXIT_CODE: 0
+DURATION_MS: 12118
+END_TIME_UTC: 2026-11-02T19:22:59.862Z
+================================================================================
+COMMAND: npm run build
+DESCRIPTION: Vite production build (tsc --noEmit && vite build)
+START_TIME_UTC: 2026-11-02T19:22:59.862Z
+--------------------------------------------------------------------------------
+
+> p010-gainfront@1.0.0 build
+> tsc --noEmit && vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 48 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                             0.41 kB │ gzip:   0.30 kB
+dist/assets/gainfront.worker-CDsoRLeA.js   27.52 kB
+dist/assets/index-Cvhq4ys8.css              8.48 kB │ gzip:   2.18 kB
+dist/assets/index-DQjzVTPd.js             333.81 kB │ gzip: 101.58 kB
+✓ built in 2.41s
+--------------------------------------------------------------------------------
+EXIT_CODE: 0
+DURATION_MS: 9202
+END_TIME_UTC: 2026-11-02T19:23:09.064Z
+
+>>> PHASE 2: STATIC DIST PACKAGING
+Created dist-release-r2.zip: 112704 bytes, SHA-256: ed59068eebcf1382633fdb7b510d1c0aec17f677d58be0759d3d0eca2e58272e
+
+>>> PHASE 3: SOURCE TREE MANIFEST & PACKAGING

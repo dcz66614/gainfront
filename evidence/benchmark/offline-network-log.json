@@ -1,0 +1,22 @@
+[
+  {
+    "url": "http://127.0.0.1:4173/",
+    "method": "GET",
+    "resourceType": "document"
+  },
+  {
+    "url": "http://127.0.0.1:4173/assets/index-p2py8AND.js",
+    "method": "GET",
+    "resourceType": "script"
+  },
+  {
+    "url": "http://127.0.0.1:4173/assets/index-Cvhq4ys8.css",
+    "method": "GET",
+    "resourceType": "stylesheet"
+  },
+  {
+    "url": "http://127.0.0.1:4173/assets/gainfront.worker-DrWXqzrn.js",
+    "method": "GET",
+    "resourceType": "script"
+  }
+]

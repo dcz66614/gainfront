@@ -1,0 +1,39 @@
+================================================================================
+P010-T015 验收运行报告与端到端实测清单
+================================================================================
+
+1. 命令退出码与测试数统计：
+--------------------------------------------------------------------------------
+- npm ci: 退出码 0（added 101 packages）
+- npm run typecheck: 退出码 0（tsc --noEmit 无错误）
+- npm test: 退出码 0（14 个测试文件全部通过，共 232 项测试全部 PASS）
+- npm run build: 退出码 0（tsc --noEmit && vite build 产物构建成功）
+- npm run test:e2e: 退出码 0（3 个端到端测试文件，共 6 项 E2E 测试全部 PASS）
+
+2. 交付文件 (OUTPUT_PATHS):
+--------------------------------------------------------------------------------
+- tests/e2e/tour.spec.ts: 首屏真实流程（GF-A 失败见证 -> 参数切换 -> GF-B 可达 -> 导出会话 JSON -> 导入预设重放 -> 外部 WAV 上传重绑与 SHA-256 核验）
+- tests/e2e/race.spec.ts: 快速连续切换预设与快速拖动滑块（模拟最末请求胜出，验证无旧请求残留）
+- tests/e2e/importExport.spec.ts: 导出 JSON 被 T009 parseSession 严格读回核验；篡改版本号与篡改 SHA-256 拒绝且清空旧结论
+- playwright.config.ts: Playwright E2E 配置文件，配置 127.0.0.1 端口 4173，webServer 执行 vite preview 托管真实构建产物
+- evidence/validation-logs/T015-acceptance.txt: 完整验收命令全量控制台输出日志
+- evidence/validation-logs/T015-summary.txt: 本验收与清单汇总报告
+
+3. 授权范围内的 App.tsx 改动说明:
+--------------------------------------------------------------------------------
+- 为 E2E 定位补齐 data-testid（app-root, slot-wave-compare, slot-gate-strip, slot-gain-frontier, slot-evidence-panel, slot-import-export）。
+- 修复导入会话与清空旧结论的接线逻辑：在 slot-import-export 捕获文件选择事件，选择新 JSON 会话时立即清空旧结论（置 report=null, workerStatus='IDLE'），确保篡改文件导入失败后旧报告不被残留冒充。
+- 外部 WAV 重绑成功后，清空 presetPcm（设为 null），避免残留前一个预设的波形。
+
+4. 实际生成的测试截图清单:
+--------------------------------------------------------------------------------
+- evidence/validation-logs/T015-tour-01-gf-a-blocked.png (GF-A 峰值受阻与失败见证首屏真实截图)
+- evidence/validation-logs/T015-tour-02-params-adjusted.png (调整目标响度与参数状态截图)
+- evidence/validation-logs/T015-tour-03-gf-b-feasible.png (切换 GF-B 达成 GAIN_FEASIBLE 截图)
+- evidence/validation-logs/T015-tour-04-preset-reimported.png (重新导入预设会话 JSON 成功恢复状态截图)
+- evidence/validation-logs/T015-tour-05-external-wav-rebound.png (独立外部 WAV 本地 SHA-256 核验重绑成功截图)
+- evidence/validation-logs/T015-race-01-preset-race.png (快切预设最末请求 GF-D 胜出状态截图)
+- evidence/validation-logs/T015-race-02-slider-race.png (快拖滑块最末目标 -22.0 LUFS 胜出状态截图)
+- evidence/validation-logs/T015-import-01-tampered-version-rejected.png (篡改 specVersion 被拒绝且旧报告清空截图)
+- evidence/validation-logs/T015-import-02-tampered-sha-rejected.png (篡改 SHA-256 外部重绑被拒绝且旧报告清空截图)
+================================================================================

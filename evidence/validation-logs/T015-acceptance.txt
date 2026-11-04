@@ -1,0 +1,102 @@
+=== 1. npm ci ===
+
+added 101 packages in 2s
+
+18 packages are looking for funding
+  run `npm fund` for details
+EXIT_CODE_NPM_CI: 0
+
+=== 2. npm run typecheck ===
+
+> p010-gainfront@1.0.0 typecheck
+> tsc --noEmit
+
+EXIT_CODE_TYPECHECK: 0
+
+=== 3. npm test ===
+
+> p010-gainfront@1.0.0 test
+> vitest run
+
+
+ RUN  v4.1.12 /home/hatch/workspace/p010-work/P010-gainfront/03_source
+
+ ✓ tests/math/session.test.ts (22 tests) 1590ms
+     ✓ preserves measurement and solver results across save -> load -> rebind for presets  672ms
+ ✓ tests/math/gain.test.ts (17 tests) 2037ms
+       ✓ measures integrated loudness, sample peak, and 4x true peak in a single pass  303ms
+ ✓ tests/math/worker.test.ts (19 tests) 2227ms
+       ✓ executes preset analysis successfully and returns matching requestId with AnalysisReport  322ms
+       ✓ executes consecutive requests without state leakage or cache pollution  490ms
+ ✓ tests/math/types.test.ts (36 tests) 26ms
+ ✓ tests/math/wav.test.ts (24 tests) 110ms
+ ✓ tests/math/gating.test.ts (18 tests) 613ms
+ ✓ tests/math/truepeak.test.ts (24 tests) 1317ms
+ ✓ tests/ui/gainFrontier.test.ts (11 tests) 903ms
+       ✓ verifies GF-A (Peak Trap): 481 points, status GAIN_BLOCKED_PEAK_OR_RANGE, 0 feasible points  314ms
+ ✓ tests/ui/evidenceImportExport.test.ts (13 tests) 1099ms
+       ✓ verifies GF-A (Peak Trap): gBest 0.6, gTarget 7.0, deviation 6.4005, boundary 0.60 matches solver  382ms
+ ✓ tests/math/biquad.test.ts (17 tests) 2188ms
+       ✓ MATH01: all-zero input produces strictly zero output across all samples  1385ms
+       ✓ filtering stereo channels together equals filtering each channel individually  369ms
+stdout | tests/oracle/ebur128.test.ts > P010-T008 Independent Oracle: FFmpeg 8.1.2 ebur128 vs Worker measure() > MATH03: GF-B integrated loudness matches FFmpeg within ±0.20 LU
+[MATH03 GF-B] Worker: -23.0035 LUFS, FFmpeg: -23.0000 LUFS, Diff: 0.0035 LU
+
+ ✓ tests/ui/waveGate.test.ts (10 tests) 809ms
+       ✓ accurately maps 77 blocks for GF-A and verifies peak frame at 192000  423ms
+stdout | tests/oracle/ebur128.test.ts > P010-T008 Independent Oracle: FFmpeg 8.1.2 ebur128 vs Worker measure() > GF-C (stereo energy): integrated loudness matches FFmpeg within ±0.20 LU
+[MATH03 GF-C] Worker: -19.9932 LUFS, FFmpeg: -20.0000 LUFS, Diff: 0.0068 LU
+
+ ✓ tests/placeholder.test.ts (1 test) 4ms
+stdout | tests/oracle/ebur128.test.ts > P010-T008 Independent Oracle: FFmpeg 8.1.2 ebur128 vs Worker measure() > GF-A (peak trap): integrated loudness matches FFmpeg within ±0.20 LU
+[MATH03 GF-A] Worker: -23.0004 LUFS, FFmpeg: -23.0000 LUFS, Diff: 0.0004 LU
+
+ ✓ tests/oracle/ebur128.test.ts (4 tests) 2307ms
+     ✓ verifies FFmpeg binary is version 8.1.2  404ms
+     ✓ MATH03: GF-B integrated loudness matches FFmpeg within ±0.20 LU  772ms
+     ✓ GF-C (stereo energy): integrated loudness matches FFmpeg within ±0.20 LU  629ms
+     ✓ GF-A (peak trap): integrated loudness matches FFmpeg within ±0.20 LU  496ms
+ ✓ tests/math/presets.test.ts (16 tests) 3337ms
+       ✓ generates two identical, independent L/R tracks matching GF-B  2998ms
+
+ Test Files  14 passed (14)
+      Tests  232 passed (232)
+   Start at  17:08:41
+   Duration  10.35s (transform 1.88s, setup 0ms, import 3.18s, tests 18.57s, environment 2ms)
+
+EXIT_CODE_TEST: 0
+
+=== 4. npm run build ===
+
+> p010-gainfront@1.0.0 build
+> tsc --noEmit && vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 48 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                             0.41 kB │ gzip:   0.30 kB
+dist/assets/gainfront.worker-DW0TFp-Q.js   26.48 kB
+dist/assets/index-Cvhq4ys8.css              8.48 kB │ gzip:   2.18 kB
+dist/assets/index-AitNhtDA.js             328.38 kB │ gzip: 100.40 kB
+✓ built in 2.19s
+EXIT_CODE_BUILD: 0
+
+=== 5. npm run test:e2e ===
+
+> p010-gainfront@1.0.0 test:e2e
+> playwright test
+
+
+Running 6 tests using 1 worker
+
+  ✓  1 [chromium] › tests/e2e/importExport.spec.ts:9:3 › P010-T015 Session Import/Export Contract Spec › exports session JSON and verifies full read-back with T009 parseSession (929ms)
+  ✓  2 [chromium] › tests/e2e/importExport.spec.ts:59:3 › P010-T015 Session Import/Export Contract Spec › rejects tampered session JSON (modified specVersion) and clears old conclusion (798ms)
+  ✓  3 [chromium] › tests/e2e/importExport.spec.ts:105:3 › P010-T015 Session Import/Export Contract Spec › rejects tampered SHA-256 external WAV session and keeps old report cleared (1.1s)
+  ✓  4 [chromium] › tests/e2e/race.spec.ts:5:3 › P010-T015 Fast Drag & Rapid Request Race Spec › rapid preset switching: guarantees latest-request-wins and zero stale residue (1.6s)
+  ✓  5 [chromium] › tests/e2e/race.spec.ts:50:3 › P010-T015 Fast Drag & Rapid Request Race Spec › rapid target slider dragging: guarantees latest slider target wins with clean final state (1.8s)
+  ✓  6 [chromium] › tests/e2e/tour.spec.ts:9:3 › P010-T015 End-to-End Tour Spec › executes complete real flow: GF-A blocked witness -> target switch -> GF-B feasible -> export -> re-import preset & external WAV rebind (3.2s)
+
+  6 passed (11.8s)
+EXIT_CODE_TEST_E2E: 0
